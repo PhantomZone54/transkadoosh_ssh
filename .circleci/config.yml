@@ -6,5 +6,27 @@ jobs:
     working_directory: /home/alpine/circle/
     steps:
       - run:
+          name: Add Apps
+          command: sudo apk add -uU nano
+      - run:
+          name: Git Auth
+          command: |
+            export GitHubMail GitHubName GITHUB_TOKEN
+            git config --global user.email "$GitHubMail"
+            git config --global user.name "$GitHubName"
+            git config --global credential.helper store
+            git clone -q "https://$GITHUB_TOKEN@github.com/$GitHubName/google-git-cookies.git" &> /dev/null
+            if [ -e google-git-cookies ]; then
+              bash google-git-cookies/setup_cookies.sh
+              rm -rf google-git-cookies
+            fi
+            git config --global -l
+      - run:
           name: Initialize
           command: df -hlT
+workflows:
+  version: 2
+  workstation:
+    jobs:
+      - build:
+          context: org-global
