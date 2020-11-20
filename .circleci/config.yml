@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: fr3akyphantom/skadoosh:latest
+        auth:
+          username: "$DOCKER_USERNAME"
+          password: "$DOCKERHUB_TOKEN"
     working_directory: /home/alpine/circle/
     steps:
       - run:
